@@ -21,9 +21,10 @@ import (
 
 // Instance is the abstract representation of a versioned config resource in Istio.
 type Instance struct {
-	Metadata Metadata
-	Message  config.Spec
-	Origin   Origin
+	Metadata    Metadata
+	Message     config.Spec
+	Origin      Origin
+	Attachments map[string]interface{}
 }
 
 // IsEmpty returns true if the resource Instance.Message is nil.
