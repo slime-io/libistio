@@ -29,14 +29,14 @@ import (
 	"github.com/hashicorp/go-multierror"
 	kubeJson "k8s.io/apimachinery/pkg/runtime/serializer/json"
 
-	"istio.io/istio/galley/pkg/config/scope"
-	"istio.io/istio/galley/pkg/config/source/inmemory"
-	"istio.io/istio/galley/pkg/config/source/kube/rt"
-	"istio.io/istio/galley/pkg/config/util/kubeyaml"
-	"istio.io/istio/pkg/config/event"
-	"istio.io/istio/pkg/config/resource"
-	"istio.io/istio/pkg/config/schema/collection"
-	schemaresource "istio.io/istio/pkg/config/schema/resource"
+	"istio.io/libistio/galley/pkg/config/scope"
+	"istio.io/libistio/galley/pkg/config/source/inmemory"
+	"istio.io/libistio/galley/pkg/config/source/kube/rt"
+	"istio.io/libistio/galley/pkg/config/util/kubeyaml"
+	"istio.io/libistio/pkg/config/event"
+	"istio.io/libistio/pkg/config/resource"
+	"istio.io/libistio/pkg/config/schema/collection"
+	schemaresource "istio.io/libistio/pkg/config/schema/resource"
 )
 
 var inMemoryKubeNameDiscriminator int64

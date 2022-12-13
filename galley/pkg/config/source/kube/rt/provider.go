@@ -25,8 +25,8 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/informers"
 
-	"istio.io/istio/galley/pkg/config/source/kube"
-	"istio.io/istio/pkg/config/schema/resource"
+	"istio.io/libistio/galley/pkg/config/source/kube"
+	"istio.io/libistio/pkg/config/schema/resource"
 )
 
 var (

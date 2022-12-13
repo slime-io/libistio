@@ -18,8 +18,8 @@ import (
 	"istio.io/api/annotation"
 	meshconfig "istio.io/api/mesh/v1alpha1"
 
-	"istio.io/istio/galley/pkg/config/scope"
-	"istio.io/istio/pkg/config/resource"
+	"istio.io/libistio/galley/pkg/config/scope"
+	"istio.io/libistio/pkg/config/resource"
 )
 
 const (

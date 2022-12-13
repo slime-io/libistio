@@ -17,10 +17,10 @@
 package transforms
 
 import (
-	"istio.io/istio/galley/pkg/config/processing/transformer"
-	"istio.io/istio/galley/pkg/config/processor/transforms/direct"
-	"istio.io/istio/galley/pkg/config/processor/transforms/ingress"
-	"istio.io/istio/pkg/config/schema"
+	"istio.io/libistio/galley/pkg/config/processing/transformer"
+	"istio.io/libistio/galley/pkg/config/processor/transforms/direct"
+	"istio.io/libistio/galley/pkg/config/processor/transforms/ingress"
+	"istio.io/libistio/pkg/config/schema"
 )
 
 //Providers builds and returns a list of all transformer objects

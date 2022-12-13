@@ -19,9 +19,9 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"istio.io/istio/pkg/config/schema/collection"
-	"istio.io/istio/pkg/config/schema/resource"
-	"istio.io/istio/pkg/test/config"
+	"istio.io/libistio/pkg/config/schema/collection"
+	"istio.io/libistio/pkg/config/schema/resource"
+	"istio.io/libistio/pkg/test/config"
 )
 
 var (

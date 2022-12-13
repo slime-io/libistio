@@ -21,12 +21,12 @@ import (
 
 	"istio.io/api/mesh/v1alpha1"
 
-	"istio.io/istio/galley/pkg/config/scope"
-	"istio.io/istio/galley/pkg/config/source/kube/rt"
-	"istio.io/istio/pkg/config/event"
-	"istio.io/istio/pkg/config/resource"
-	"istio.io/istio/pkg/config/schema/collection"
-	"istio.io/istio/pkg/config/schema/collections"
+	"istio.io/libistio/galley/pkg/config/scope"
+	"istio.io/libistio/galley/pkg/config/source/kube/rt"
+	"istio.io/libistio/pkg/config/event"
+	"istio.io/libistio/pkg/config/resource"
+	"istio.io/libistio/pkg/config/schema/collection"
+	"istio.io/libistio/pkg/config/schema/collections"
 )
 
 // InMemorySource is an event.InMemorySource implementation for meshconfig. When the mesh config is first set, add & fullsync events

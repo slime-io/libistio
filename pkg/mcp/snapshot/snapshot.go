@@ -24,8 +24,8 @@ import (
 	mcp "istio.io/api/mcp/v1alpha1"
 	"istio.io/pkg/log"
 
-	"istio.io/istio/pkg/mcp/sink"
-	"istio.io/istio/pkg/mcp/source"
+	"istio.io/libistio/pkg/mcp/sink"
+	"istio.io/libistio/pkg/mcp/source"
 )
 
 var scope = log.RegisterScope("mcp", "mcp debugging", 0)

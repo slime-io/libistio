@@ -15,10 +15,10 @@
 package kuberesource
 
 import (
-	"istio.io/istio/galley/pkg/config/processing/transformer"
-	"istio.io/istio/galley/pkg/config/source/kube/rt"
-	"istio.io/istio/pkg/config/schema"
-	"istio.io/istio/pkg/config/schema/collection"
+	"istio.io/libistio/galley/pkg/config/processing/transformer"
+	"istio.io/libistio/galley/pkg/config/source/kube/rt"
+	"istio.io/libistio/pkg/config/schema"
+	"istio.io/libistio/pkg/config/schema/collection"
 )
 
 // DisableExcludedCollections is a helper that filters collection.Schemas to disable some resources

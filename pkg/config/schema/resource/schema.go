@@ -22,8 +22,8 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	"istio.io/istio/pkg/config/labels"
-	"istio.io/istio/pkg/config/validation"
+	"istio.io/libistio/pkg/config/labels"
+	"istio.io/libistio/pkg/config/validation"
 )
 
 // Schema for a resource.

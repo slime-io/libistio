@@ -17,7 +17,7 @@ package resource
 import (
 	"time"
 
-	"istio.io/istio/pkg/config/schema/resource"
+	"istio.io/libistio/pkg/config/schema/resource"
 )
 
 // Metadata about a resource.

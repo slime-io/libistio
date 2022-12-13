@@ -23,7 +23,7 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
-	"istio.io/istio/pkg/config/host"
+	"istio.io/libistio/pkg/config/host"
 )
 
 // JwksInfo provides values resulting from parsing a jwks URI.

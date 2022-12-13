@@ -24,13 +24,13 @@ import (
 	meshconfig "istio.io/api/mesh/v1alpha1"
 	"istio.io/api/networking/v1alpha3"
 
-	"istio.io/istio/galley/pkg/config/processing"
-	"istio.io/istio/galley/pkg/config/processing/transformer"
-	"istio.io/istio/galley/pkg/config/synthesize"
-	"istio.io/istio/pkg/config/event"
-	"istio.io/istio/pkg/config/resource"
-	"istio.io/istio/pkg/config/schema/collection"
-	"istio.io/istio/pkg/config/schema/collections"
+	"istio.io/libistio/galley/pkg/config/processing"
+	"istio.io/libistio/galley/pkg/config/processing/transformer"
+	"istio.io/libistio/galley/pkg/config/synthesize"
+	"istio.io/libistio/pkg/config/event"
+	"istio.io/libistio/pkg/config/resource"
+	"istio.io/libistio/pkg/config/schema/collection"
+	"istio.io/libistio/pkg/config/schema/collections"
 )
 
 type gatewayXform struct {

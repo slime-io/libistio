@@ -4,9 +4,9 @@
 package collections
 
 import (
-	"istio.io/istio/pkg/config/schema/collection"
-	"istio.io/istio/pkg/config/schema/resource"
-	"istio.io/istio/pkg/config/validation"
+	"istio.io/libistio/pkg/config/schema/collection"
+	"istio.io/libistio/pkg/config/schema/resource"
+	"istio.io/libistio/pkg/config/validation"
 )
 
 var (

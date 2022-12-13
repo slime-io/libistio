@@ -30,9 +30,9 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 
-	"istio.io/istio/galley/pkg/config/scope"
-	"istio.io/istio/galley/pkg/config/source/kube/apiserver/stats"
-	"istio.io/istio/pkg/listwatch"
+	"istio.io/libistio/galley/pkg/config/scope"
+	"istio.io/libistio/galley/pkg/config/source/kube/apiserver/stats"
+	"istio.io/libistio/pkg/listwatch"
 )
 
 func (p *Provider) initKnownAdapters() {
