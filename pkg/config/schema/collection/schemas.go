@@ -16,23 +16,25 @@ package collection
 
 import (
 	"fmt"
-	"sort"
-	"strings"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/go-multierror"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	"istio.io/libistio/pkg/config/schema/resource"
+	"istio.io/istio/pkg/config"
+	"istio.io/istio/pkg/config/schema/resource"
+	"istio.io/istio/pkg/slices"
+	"istio.io/istio/pkg/util/sets"
 )
 
 // Schemas contains metadata about configuration resources.
 type Schemas struct {
-	byCollection map[Name]Schema
-	byAddOrder   []Schema
+	byCollection map[config.GroupVersionKind]resource.Schema
+	byAddOrder   []resource.Schema
 }
 
 // SchemasFor is a shortcut for creating Schemas. It uses MustAdd for each element.
-func SchemasFor(schemas ...Schema) Schemas {
+func SchemasFor(schemas ...resource.Schema) Schemas {
 	b := NewSchemasBuilder()
 	for _, s := range schemas {
 		b.MustAdd(s)
@@ -48,7 +50,7 @@ type SchemasBuilder struct {
 // NewSchemasBuilder returns a new instance of SchemasBuilder.
 func NewSchemasBuilder() *SchemasBuilder {
 	s := Schemas{
-		byCollection: make(map[Name]Schema),
+		byCollection: make(map[config.GroupVersionKind]resource.Schema),
 	}
 
 	return &SchemasBuilder{
@@ -57,18 +59,18 @@ func NewSchemasBuilder() *SchemasBuilder {
 }
 
 // Add a new collection to the schemas.
-func (b *SchemasBuilder) Add(s Schema) error {
-	if _, found := b.schemas.byCollection[s.Name()]; found {
-		return fmt.Errorf("collection already exists: %v", s.Name())
+func (b *SchemasBuilder) Add(s resource.Schema) error {
+	if _, found := b.schemas.byCollection[s.GroupVersionKind()]; found {
+		return fmt.Errorf("collection already exists: %v", s.GroupVersionKind())
 	}
 
-	b.schemas.byCollection[s.Name()] = s
+	b.schemas.byCollection[s.GroupVersionKind()] = s
 	b.schemas.byAddOrder = append(b.schemas.byAddOrder, s)
 	return nil
 }
 
 // MustAdd calls Add and panics if it fails.
-func (b *SchemasBuilder) MustAdd(s Schema) *SchemasBuilder {
+func (b *SchemasBuilder) MustAdd(s resource.Schema) *SchemasBuilder {
 	if err := b.Add(s); err != nil {
 		panic(fmt.Sprintf("SchemasBuilder.MustAdd: %v", err))
 	}
@@ -86,7 +88,7 @@ func (b *SchemasBuilder) Build() Schemas {
 }
 
 // ForEach executes the given function on each contained schema, until the function returns true.
-func (s Schemas) ForEach(handleSchema func(Schema) (done bool)) {
+func (s Schemas) ForEach(handleSchema func(resource.Schema) (done bool)) {
 	for _, schema := range s.byAddOrder {
 		if handleSchema(schema) {
 			return
@@ -94,25 +96,40 @@ func (s Schemas) ForEach(handleSchema func(Schema) (done bool)) {
 	}
 }
 
-// Find looks up a Schema by its collection name.
-func (s Schemas) Find(collection string) (Schema, bool) {
-	i, ok := s.byCollection[Name(collection)]
-	return i, ok
-}
-
-// MustFind calls Find and panics if not found.
-func (s Schemas) MustFind(collection string) Schema {
-	i, ok := s.Find(collection)
-	if !ok {
-		panic(fmt.Sprintf("schemas.MustFind: matching entry not found for collection: %q", collection))
+func (s Schemas) Union(otherSchemas Schemas) Schemas {
+	resultBuilder := NewSchemasBuilder()
+	for _, myschema := range s.All() {
+		// an error indicates the schema has already been added, which doesn't negatively impact intersect
+		_ = resultBuilder.Add(myschema)
 	}
-	return i
+	for _, myschema := range otherSchemas.All() {
+		// an error indicates the schema has already been added, which doesn't negatively impact intersect
+		_ = resultBuilder.Add(myschema)
+	}
+	return resultBuilder.Build()
 }
 
-// FindByKind searches and returns the first schema with the given kind
-func (s Schemas) FindByGroupVersionKind(gvk resource.GroupVersionKind) (Schema, bool) {
+func (s Schemas) Intersect(otherSchemas Schemas) Schemas {
+	resultBuilder := NewSchemasBuilder()
+
+	schemaLookup := sets.String{}
+	for _, myschema := range s.All() {
+		schemaLookup.Insert(myschema.String())
+	}
+
+	// Only add schemas that are in both sets
+	for _, myschema := range otherSchemas.All() {
+		if schemaLookup.Contains(myschema.String()) {
+			_ = resultBuilder.Add(myschema)
+		}
+	}
+	return resultBuilder.Build()
+}
+
+// FindByGroupVersionKind searches and returns the first schema with the given GVK
+func (s Schemas) FindByGroupVersionKind(gvk config.GroupVersionKind) (resource.Schema, bool) {
 	for _, rs := range s.byAddOrder {
-		if rs.Resource().GroupVersionKind() == gvk {
+		if rs.GroupVersionKind() == gvk {
 			return rs, true
 		}
 	}
@@ -120,33 +137,46 @@ func (s Schemas) FindByGroupVersionKind(gvk resource.GroupVersionKind) (Schema, 
 	return nil, false
 }
 
-// FindByKind searches and returns the first schema with the given kind
-func (s Schemas) FindByPlural(plural string) (Schema, bool) {
+// FindByGroupVersionAliasesKind searches and returns the first schema with the given GVK,
+// if not found, it will search for version aliases for the schema to see if there is a match.
+func (s Schemas) FindByGroupVersionAliasesKind(gvk config.GroupVersionKind) (resource.Schema, bool) {
 	for _, rs := range s.byAddOrder {
-		if rs.Resource().Plural() == plural {
+		for _, va := range rs.GroupVersionAliasKinds() {
+			if va == gvk {
+				return rs, true
+			}
+		}
+	}
+	return nil, false
+}
+
+// FindByGroupVersionResource searches and returns the first schema with the given GVR
+func (s Schemas) FindByGroupVersionResource(gvr schema.GroupVersionResource) (resource.Schema, bool) {
+	for _, rs := range s.byAddOrder {
+		if rs.GroupVersionResource() == gvr {
 			return rs, true
 		}
 	}
 
 	return nil, false
-}
-
-// MustFind calls FindByGroupVersionKind and panics if not found.
-func (s Schemas) MustFindByGroupVersionKind(gvk resource.GroupVersionKind) Schema {
-	r, found := s.FindByGroupVersionKind(gvk)
-	if !found {
-		panic(fmt.Sprintf("Schemas.MustFindByGroupVersionKind: unable to find %s", gvk))
-	}
-	return r
 }
 
 // All returns all known Schemas
-func (s Schemas) All() []Schema {
-	return append(make([]Schema, 0, len(s.byAddOrder)), s.byAddOrder...)
+func (s Schemas) All() []resource.Schema {
+	return slices.Clone(s.byAddOrder)
+}
+
+// GroupVersionKinds returns all known GroupVersionKinds
+func (s Schemas) GroupVersionKinds() []config.GroupVersionKind {
+	res := []config.GroupVersionKind{}
+	for _, r := range s.All() {
+		res = append(res, r.GroupVersionKind())
+	}
+	return res
 }
 
 // Add creates a copy of this Schemas with the given schemas added.
-func (s Schemas) Add(toAdd ...Schema) Schemas {
+func (s Schemas) Add(toAdd ...resource.Schema) Schemas {
 	b := NewSchemasBuilder()
 
 	for _, s := range s.byAddOrder {
@@ -158,17 +188,16 @@ func (s Schemas) Add(toAdd ...Schema) Schemas {
 	}
 
 	return b.Build()
-
 }
 
 // Remove creates a copy of this Schemas with the given schemas removed.
-func (s Schemas) Remove(toRemove ...Schema) Schemas {
+func (s Schemas) Remove(toRemove ...resource.Schema) Schemas {
 	b := NewSchemasBuilder()
 
 	for _, s := range s.byAddOrder {
 		shouldAdd := true
 		for _, r := range toRemove {
-			if r.Name() == s.Name() {
+			if r.Equal(s) {
 				shouldAdd = false
 				break
 			}
@@ -181,52 +210,21 @@ func (s Schemas) Remove(toRemove ...Schema) Schemas {
 	return b.Build()
 }
 
-// CollectionNames returns all known collections.
-func (s Schemas) CollectionNames() Names {
-	result := make(Names, 0, len(s.byAddOrder))
-
-	for _, info := range s.byAddOrder {
-		result = append(result, info.Name())
-	}
-
-	sort.Slice(result, func(i, j int) bool {
-		return strings.Compare(result[i].String(), result[j].String()) < 0
-	})
-
-	return result
-}
-
 // Kinds returns all known resource kinds.
 func (s Schemas) Kinds() []string {
-	kinds := make(map[string]struct{}, len(s.byAddOrder))
+	kinds := sets.NewWithLength[string](len(s.byAddOrder))
 	for _, s := range s.byAddOrder {
-		kinds[s.Resource().Kind()] = struct{}{}
+		kinds.Insert(s.Kind())
 	}
 
-	out := make([]string, 0, len(kinds))
-	for kind := range kinds {
-		out = append(out, kind)
-	}
-
-	sort.Strings(out)
-	return out
-}
-
-// DisabledCollectionNames returns the names of disabled collections
-func (s Schemas) DisabledCollectionNames() Names {
-	disabledCollections := make(Names, 0)
-	for _, i := range s.byAddOrder {
-		if i.IsDisabled() {
-			disabledCollections = append(disabledCollections, i.Name())
-		}
-	}
-	return disabledCollections
+	out := kinds.UnsortedList()
+	return slices.Sort(out)
 }
 
 // Validate the schemas. Returns error if there is a problem.
 func (s Schemas) Validate() (err error) {
 	for _, c := range s.byAddOrder {
-		err = multierror.Append(err, c.Resource().Validate()).ErrorOrNil()
+		err = multierror.Append(err, c.Validate()).ErrorOrNil()
 	}
 	return
 }

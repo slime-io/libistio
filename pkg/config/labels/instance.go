@@ -15,12 +15,14 @@
 package labels
 
 import (
-	"bytes"
 	"fmt"
 	"regexp"
-	"sort"
+	"strings"
 
 	"github.com/hashicorp/go-multierror"
+
+	"istio.io/istio/pkg/maps"
+	"istio.io/istio/pkg/slices"
 )
 
 const (
@@ -54,25 +56,37 @@ var (
 // have labels name=kittyCat,region=us-east.
 type Instance map[string]string
 
-// SubsetOf is true if the label has identical values for the keys
+// SubsetOf is true if the label has same values for the keys
 func (i Instance) SubsetOf(that Instance) bool {
-	for k, v := range i {
-		if that[k] != v {
+	if len(i) == 0 {
+		return true
+	}
+
+	if len(that) == 0 || len(that) < len(i) {
+		return false
+	}
+
+	for k, v1 := range i {
+		if v2, ok := that[k]; !ok || v1 != v2 {
 			return false
 		}
 	}
 	return true
 }
 
-// Equals returns true if the labels are identical
+// Match is true if the label has same values for the keys.
+// if len(i) == 0, will return false. It is mainly used for service -> workload
+func (i Instance) Match(that Instance) bool {
+	if len(i) == 0 {
+		return false
+	}
+
+	return i.SubsetOf(that)
+}
+
+// Equals returns true if the labels are equal.
 func (i Instance) Equals(that Instance) bool {
-	if i == nil {
-		return that == nil
-	}
-	if that == nil {
-		return i == nil
-	}
-	return i.SubsetOf(that) && that.SubsetOf(i)
+	return maps.Equal(i, that)
 }
 
 // Validate ensures tag is well-formed
@@ -126,25 +140,25 @@ func validateTagKey(k string) error {
 }
 
 func (i Instance) String() string {
-	labels := make([]string, 0, len(i))
-	for k, v := range i {
-		if len(v) > 0 {
-			labels = append(labels, fmt.Sprintf("%s=%s", k, v))
-		} else {
-			labels = append(labels, k)
-		}
-	}
-	sort.Strings(labels)
+	// Ensure stable ordering
+	keys := slices.Sort(maps.Keys(i))
 
-	var buffer bytes.Buffer
-	var first = true
-	for _, label := range labels {
+	var buffer strings.Builder
+	// Assume each kv pair is roughly 25 characters. We could be under or over, this is just a guess to optimize
+	buffer.Grow(len(keys) * 25)
+	first := true
+	for _, k := range keys {
+		v := i[k]
 		if !first {
 			buffer.WriteString(",")
 		} else {
 			first = false
 		}
-		buffer.WriteString(label)
+		if len(v) > 0 {
+			buffer.WriteString(k + "=" + v)
+		} else {
+			buffer.WriteString(k)
+		}
 	}
 	return buffer.String()
 }

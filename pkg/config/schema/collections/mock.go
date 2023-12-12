@@ -17,33 +17,29 @@ package collections
 import (
 	"errors"
 
-	"github.com/gogo/protobuf/proto"
-
-	"istio.io/libistio/pkg/config/schema/collection"
-	"istio.io/libistio/pkg/config/schema/resource"
-	"istio.io/libistio/pkg/test/config"
+	"istio.io/istio/pkg/config"
+	"istio.io/istio/pkg/config/schema/collection"
+	"istio.io/istio/pkg/config/schema/resource"
+	"istio.io/istio/pkg/config/validation"
+	testconfig "istio.io/istio/pkg/test/config"
 )
 
 var (
 	// Mock is used purely for testing
-	Mock = collection.Builder{
-		Name:         "mock",
-		VariableName: "Mock",
-		Resource: resource.Builder{
-			ClusterScoped: false,
-			Kind:          "MockConfig",
-			Plural:        "mockconfigs",
-			Group:         "test.istio.io",
-			Version:       "v1",
-			Proto:         "test.MockConfig",
-			ProtoPackage:  "istio.io/istio/pkg/test/config",
-			ValidateProto: func(name, namespace string, msg proto.Message) error {
-				if msg.(*config.MockConfig).Key == "" {
-					return errors.New("empty key")
-				}
-				return nil
-			},
-		}.MustBuild(),
+	Mock = resource.Builder{
+		ClusterScoped: false,
+		Kind:          "MockConfig",
+		Plural:        "mockconfigs",
+		Group:         "test.istio.io",
+		Version:       "v1",
+		Proto:         "config.MockConfig",
+		ProtoPackage:  "istio.io/istio/pkg/test/config",
+		ValidateProto: func(cfg config.Config) (validation.Warning, error) {
+			if cfg.Spec.(*testconfig.MockConfig).Key == "" {
+				return nil, errors.New("empty key")
+			}
+			return nil, nil
+		},
 	}.MustBuild()
 
 	// Mocks is a Schemas containing the Mock Schema.

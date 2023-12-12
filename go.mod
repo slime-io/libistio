@@ -1,6 +1,6 @@
 module istio.io/libistio
 
-go 1.13
+go 1.20
 
 replace github.com/golang/glog => github.com/istio/glog v0.0.0-20190424172949-d7cfb6fa2ccd
 
@@ -10,37 +10,72 @@ replace k8s.io/klog => github.com/istio/klog v0.0.0-20190424230111-fb7481ea8bcf
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.5
 
 require (
-	github.com/cenkalti/backoff v2.0.0+incompatible
-	github.com/davecgh/go-spew v1.1.1
-	github.com/ghodss/yaml v1.0.0
-	github.com/gogo/protobuf v1.3.1
-	github.com/golang/groupcache v0.0.0-20191027212112-611e8accdfc9 // indirect
-	github.com/golang/protobuf v1.3.5
-	github.com/google/go-cmp v0.4.0
+	github.com/cncf/xds/go v0.0.0-20230607035331-e9ce68804cb4
+	github.com/envoyproxy/go-control-plane v0.11.2-0.20230725211550-11bfe846bcd4
+	github.com/go-logr/logr v1.3.0
+	github.com/gogo/protobuf v1.3.2
+	github.com/golang/protobuf v1.5.3
+	github.com/google/cel-go v0.18.2
+	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/go-multierror v1.0.0
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/imdario/mergo v0.3.8 // indirect
-	github.com/json-iterator/go v1.1.9 // indirect
-	github.com/onsi/gomega v1.9.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	github.com/spf13/cobra v1.0.0 // indirect
-	github.com/stretchr/testify v1.5.1 // indirect
-	go.opencensus.io v0.22.2
-	golang.org/x/crypto v0.0.0-20200414173820-0848c9571904 // indirect
-	golang.org/x/net v0.0.0-20191014212845-da9a3fd4c582 // indirect
-	golang.org/x/sys v0.0.0-20200116001909-b77594299b42 // indirect
-	golang.org/x/time v0.0.0-20190921001708-c4c64cad1fd0
-	google.golang.org/appengine v1.6.5 // indirect
-	google.golang.org/genproto v0.0.0-20191223191004-3caeed10a8bf
-	google.golang.org/grpc v1.28.1
-	gopkg.in/yaml.v2 v2.2.8
-	istio.io/api v0.0.0-20200603210121-2ade53f717e4
-	istio.io/gogo-genproto v0.0.0-20200422223746-8166b73efbae
+	github.com/lestrrat-go/jwx v1.2.27
+	github.com/spf13/cobra v1.7.0
+	github.com/spf13/pflag v1.0.5
+	go.uber.org/atomic v1.10.0
+	go.uber.org/zap v1.26.0
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
+	google.golang.org/grpc v1.58.3
+	google.golang.org/protobuf v1.31.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	istio.io/api v1.19.1
+	istio.io/istio v0.0.0-00010101000000-000000000000
 	istio.io/pkg v0.0.0-20200504224939-261164cc57da
-	k8s.io/api v0.18.3
-	k8s.io/apiextensions-apiserver v0.18.3
-	k8s.io/apimachinery v0.18.3
-	k8s.io/client-go v0.18.3
-	sigs.k8s.io/controller-runtime v0.5.1-0.20200327213554-2d4c4877f906 // indirect
-	sigs.k8s.io/service-apis v0.0.0-20200227172328-b9010cfacdbe
+	k8s.io/api v0.28.4
+	k8s.io/apiextensions-apiserver v0.28.4
+	k8s.io/apimachinery v0.28.4
+	k8s.io/klog/v2 v2.100.1
+	sigs.k8s.io/gateway-api v1.0.0
+	sigs.k8s.io/yaml v1.4.0
+)
+
+require (
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
+	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
+	github.com/envoyproxy/protoc-gen-validate v1.0.2 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/google/gofuzz v1.2.0 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
+	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
+	github.com/lestrrat-go/httpcc v1.0.1 // indirect
+	github.com/lestrrat-go/iter v1.0.2 // indirect
+	github.com/lestrrat-go/option v1.0.1 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/prometheus/client_model v0.5.0 // indirect
+	github.com/stoewer/go-strcase v1.2.0 // indirect
+	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/crypto v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	google.golang.org/genproto v0.0.0-20231002182017-d307bd883b97 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230920204549-e6e6cdab5c13 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231009173412-8bfb1ae86b6c // indirect
+	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
+	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.3.0 // indirect
+)
+
+replace (
+	golang.org/x/exp => golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+	istio.io/istio => ./
 )

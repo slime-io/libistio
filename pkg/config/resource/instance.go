@@ -16,15 +16,14 @@
 package resource
 
 import (
-	"github.com/gogo/protobuf/proto"
+	"istio.io/istio/pkg/config"
 )
 
 // Instance is the abstract representation of a versioned config resource in Istio.
 type Instance struct {
-	Metadata    Metadata
-	Message     proto.Message
-	Origin      Origin
-	Attachments map[string]interface{}
+	Metadata Metadata
+	Message  config.Spec
+	Origin   Origin
 }
 
 // IsEmpty returns true if the resource Instance.Message is nil.
@@ -36,7 +35,7 @@ func (r *Instance) IsEmpty() bool {
 func (r *Instance) Clone() *Instance {
 	result := &Instance{}
 	if r.Message != nil {
-		result.Message = proto.Clone(r.Message)
+		result.Message = config.DeepCopy(r.Message)
 	}
 	result.Metadata = r.Metadata.Clone()
 	return result

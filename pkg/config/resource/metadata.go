@@ -17,7 +17,8 @@ package resource
 import (
 	"time"
 
-	"istio.io/libistio/pkg/config/schema/resource"
+	"istio.io/istio/pkg/config/schema/resource"
+	"istio.io/istio/pkg/maps"
 )
 
 // Metadata about a resource.
@@ -26,14 +27,15 @@ type Metadata struct {
 	FullName    FullName
 	CreateTime  time.Time
 	Version     Version
-	Labels      StringMap
-	Annotations StringMap
+	Generation  int64
+	Labels      map[string]string
+	Annotations map[string]string
 }
 
 // Clone Metadata. Warning, this is expensive!
 func (m *Metadata) Clone() Metadata {
 	result := *m
-	result.Annotations = m.Annotations.Clone()
-	result.Labels = m.Labels.Clone()
+	result.Annotations = maps.Clone(m.Annotations)
+	result.Labels = maps.Clone(m.Labels)
 	return result
 }

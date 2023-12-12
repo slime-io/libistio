@@ -36,9 +36,9 @@ type Event struct {
 
 // SourceName is a utility method that returns the name of the source. If nil, returns "".
 func (e *Event) SourceName() collection.Name {
-	if e.Source != nil {
-		return e.Source.Name()
-	}
+	// if e.Source != nil {
+	// 	return e.Source.Name()
+	// }
 	return ""
 }
 
