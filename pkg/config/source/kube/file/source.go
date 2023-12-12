@@ -15,7 +15,10 @@
 package file
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sync"
@@ -26,10 +29,17 @@ import (
 	"istio.io/libistio/pkg/config/schema/collection"
 )
 
+const (
+	extYaml = ".yaml"
+	extYml  = ".yml"
+	extGz   = ".gz"
+)
+
 var (
 	supportedExtensions = map[string]bool{
-		".yaml": true,
-		".yml":  true,
+		extYaml: true,
+		extYml:  true,
+		extGz:   true,
 	}
 )
 
@@ -133,7 +143,8 @@ func (s *source) reload() {
 			return err
 		}
 
-		if mode := info.Mode() & os.ModeType; !supportedExtensions[filepath.Ext(path)] || (mode != 0 && mode != os.ModeSymlink) {
+		ext := filepath.Ext(path)
+		if mode := info.Mode() & os.ModeType; !supportedExtensions[ext] || (mode != 0 && mode != os.ModeSymlink) {
 			return nil
 		}
 
@@ -143,6 +154,18 @@ func (s *source) reload() {
 		if err != nil {
 			scope.Infof("[%s] Error reading file %q: %v", s.name, path, err)
 			return err
+		}
+		if ext == extGz {
+			reader, err := gzip.NewReader(bytes.NewBuffer(data))
+			if err != nil {
+				scope.Infof("[%s] Error reading file %q: %v", s.name, path, err)
+				return err
+			}
+			data, err = io.ReadAll(reader)
+			if err != nil {
+				scope.Infof("[%s] Error reading file %q: %v", s.name, path, err)
+				return err
+			}
 		}
 
 		if err := s.s.ApplyContent(path, string(data)); err != nil {
