@@ -17,7 +17,7 @@ package visibility
 import (
 	"fmt"
 
-	"istio.io/istio/pkg/config/labels"
+	"istio.io/libistio/pkg/config/labels"
 )
 
 // Instance defines whether a given config or service is exported to local namespace, some set of namespaces, or

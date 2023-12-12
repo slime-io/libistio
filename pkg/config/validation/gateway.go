@@ -18,7 +18,7 @@ import (
 	gatewayalpha "sigs.k8s.io/gateway-api/apis/v1alpha2"
 	gatewayalphavalidation "sigs.k8s.io/gateway-api/apis/v1alpha2/validation"
 
-	"istio.io/istio/pkg/config"
+	"istio.io/libistio/pkg/config"
 )
 
 // nilSafePtrCast casts t.(*T) safely and returns a T

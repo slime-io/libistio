@@ -17,11 +17,11 @@ package collections
 import (
 	"errors"
 
-	"istio.io/istio/pkg/config"
-	"istio.io/istio/pkg/config/schema/collection"
-	"istio.io/istio/pkg/config/schema/resource"
-	"istio.io/istio/pkg/config/validation"
-	testconfig "istio.io/istio/pkg/test/config"
+	"istio.io/libistio/pkg/config"
+	"istio.io/libistio/pkg/config/schema/collection"
+	"istio.io/libistio/pkg/config/schema/resource"
+	"istio.io/libistio/pkg/config/validation"
+	testconfig "istio.io/libistio/pkg/test/config"
 )
 
 var (

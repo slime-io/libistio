@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	networking "istio.io/api/networking/v1alpha3"
-	"istio.io/istio/pkg/config/labels"
+	"istio.io/libistio/pkg/config/labels"
 )
 
 type HTTPRouteType int

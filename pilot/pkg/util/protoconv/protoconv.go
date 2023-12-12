@@ -23,7 +23,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"istio.io/istio/pkg/log"
+	"istio.io/libistio/pkg/log"
 )
 
 // MessageToAnyWithError converts from proto message to proto Any

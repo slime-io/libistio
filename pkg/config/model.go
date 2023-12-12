@@ -34,9 +34,9 @@ import (
 	"sigs.k8s.io/yaml"
 
 	"istio.io/api/label"
-	"istio.io/istio/pilot/pkg/util/protoconv"
-	"istio.io/istio/pkg/util/gogoprotomarshal"
-	"istio.io/istio/pkg/util/protomarshal"
+	"istio.io/libistio/pilot/pkg/util/protoconv"
+	"istio.io/libistio/pkg/util/gogoprotomarshal"
+	"istio.io/libistio/pkg/util/protomarshal"
 )
 
 // Meta is metadata attached to each configuration unit.

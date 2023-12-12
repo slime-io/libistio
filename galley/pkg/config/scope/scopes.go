@@ -14,15 +14,15 @@
 
 package scope
 
-import "istio.io/pkg/log"
+import "istio.io/libistio/pkg/log"
 
 var (
 	// Analysis is a logging scope used by configuration analysis component.
-	Analysis = log.RegisterScope("analysis", "Scope for configuration analysis runtime", 0)
+	Analysis = log.RegisterScope("analysis", "Scope for configuration analysis runtime")
 
 	// Processing is a logging scope used by configuration processing pipeline.
-	Processing = log.RegisterScope("processing", "Scope for configuration processing runtime", 0)
+	Processing = log.RegisterScope("processing", "Scope for configuration processing runtime")
 
 	// Source is a logging scope for config event sources.
-	Source = log.RegisterScope("source", "Scope for configuration event sources", 0)
+	Source = log.RegisterScope("source", "Scope for configuration event sources")
 )

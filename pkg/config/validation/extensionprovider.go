@@ -24,7 +24,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 
 	meshconfig "istio.io/api/mesh/v1alpha1"
-	"istio.io/istio/pkg/util/sets"
+	"istio.io/libistio/pkg/util/sets"
 )
 
 func validateExtensionProviderService(service string) error {

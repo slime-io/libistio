@@ -28,8 +28,6 @@ require (
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	istio.io/api v1.19.1
-	istio.io/istio v0.0.0-00010101000000-000000000000
-	istio.io/pkg v0.0.0-20200504224939-261164cc57da
 	k8s.io/api v0.28.4
 	k8s.io/apiextensions-apiserver v0.28.4
 	k8s.io/apimachinery v0.28.4
@@ -55,7 +53,6 @@ require (
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
@@ -75,7 +72,4 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.3.0 // indirect
 )
 
-replace (
-	golang.org/x/exp => golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
-	istio.io/istio => ./
-)
+replace golang.org/x/exp => golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1

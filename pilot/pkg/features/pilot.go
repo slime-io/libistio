@@ -21,11 +21,11 @@ import (
 	"go.uber.org/atomic"
 	"k8s.io/apimachinery/pkg/types"
 
-	"istio.io/istio/pkg/config/constants"
-	"istio.io/istio/pkg/env"
-	"istio.io/istio/pkg/jwt"
-	"istio.io/istio/pkg/log"
-	"istio.io/istio/pkg/util/sets"
+	"istio.io/libistio/pkg/config/constants"
+	"istio.io/libistio/pkg/env"
+	"istio.io/libistio/pkg/jwt"
+	"istio.io/libistio/pkg/log"
+	"istio.io/libistio/pkg/util/sets"
 )
 
 var (

@@ -17,7 +17,7 @@ package sets
 import (
 	"golang.org/x/exp/constraints"
 
-	"istio.io/istio/pkg/slices"
+	"istio.io/libistio/pkg/slices"
 )
 
 type Set[T comparable] map[T]struct{}
