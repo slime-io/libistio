@@ -17,8 +17,10 @@ package event
 import (
 	"sync"
 
-	"istio.io/libistio/galley/pkg/config/scope"
+	"istio.io/libistio/pkg/log"
 )
+
+var Processing = log.RegisterScope("processing", "Scope for configuration processing runtime")
 
 // Buffer is a growing event buffer.
 type Buffer struct {
@@ -88,14 +90,14 @@ func (b *Buffer) Process() {
 		// lock must be held when entering the for loop (whether from beginning, or through loop continuation).
 		// this makes locking/unlocking slightly more efficient.
 		if !b.processing {
-			scope.Processing.Debug(">>> Buffer.Process: exiting")
+			Processing.Debug(">>> Buffer.Process: exiting")
 			b.mu.Unlock()
 			return
 		}
 
 		e, ok := b.queue.pop()
 		if !ok {
-			scope.Processing.Debug("Buffer.Process: no more items to process, waiting")
+			Processing.Debug("Buffer.Process: no more items to process, waiting")
 			b.cond.Wait()
 			continue
 		}

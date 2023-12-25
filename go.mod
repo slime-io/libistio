@@ -2,16 +2,13 @@ module istio.io/libistio
 
 go 1.20
 
-replace github.com/golang/glog => github.com/istio/glog v0.0.0-20190424172949-d7cfb6fa2ccd
-
-replace k8s.io/klog => github.com/istio/klog v0.0.0-20190424230111-fb7481ea8bcf
-
 // Client-go does not handle different versions of mergo due to some breaking changes - use the matching version
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.5
 
 require (
 	github.com/cncf/xds/go v0.0.0-20230607035331-e9ce68804cb4
 	github.com/envoyproxy/go-control-plane v0.11.2-0.20230725211550-11bfe846bcd4
+	github.com/fsnotify/fsnotify v1.7.0
 	github.com/go-logr/logr v1.3.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.3
@@ -32,11 +29,14 @@ require (
 	google.golang.org/grpc v1.58.3
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	gopkg.in/yaml.v3 v3.0.1
 	istio.io/api v1.19.1
-	k8s.io/api v0.28.4
-	k8s.io/apiextensions-apiserver v0.28.4
-	k8s.io/apimachinery v0.28.4
-	k8s.io/klog/v2 v2.100.1
+	istio.io/client-go v1.19.1
+	k8s.io/api v0.28.3
+	k8s.io/apiextensions-apiserver v0.28.3
+	k8s.io/apimachinery v0.28.3
+	k8s.io/client-go v0.28.3
+	k8s.io/klog/v2 v2.110.1
 	sigs.k8s.io/gateway-api v1.0.0
 	sigs.k8s.io/yaml v1.4.0
 )
@@ -83,7 +83,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.3.0 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
 
 replace golang.org/x/exp => golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
