@@ -377,6 +377,10 @@ func (g GroupVersionKind) String() string {
 	return g.CanonicalGroup() + "/" + g.Version + "/" + g.Kind
 }
 
+func (g GroupVersionKind) MarshalText() ([]byte, error) {
+	return []byte(g.String()), nil
+}
+
 // GroupVersion returns the group/version similar to what would be found in the apiVersion field of a Kubernetes resource.
 func (g GroupVersionKind) GroupVersion() string {
 	if g.Group == "" {

@@ -19,6 +19,7 @@ import (
 
 	"istio.io/libistio/pkg/config/resource"
 	"istio.io/libistio/pkg/config/schema/collection"
+	resource2 "istio.io/libistio/pkg/config/schema/resource"
 )
 
 var _ fmt.Stringer = Event{}
@@ -28,7 +29,7 @@ type Event struct {
 	Kind Kind
 
 	// Source collection that this event is emanating from.
-	Source collection.Schema
+	Source resource2.Schema
 
 	// A single entry, in case the event is Added, Updated or Deleted.
 	Resource *resource.Instance
@@ -36,9 +37,9 @@ type Event struct {
 
 // SourceName is a utility method that returns the name of the source. If nil, returns "".
 func (e *Event) SourceName() collection.Name {
-	// if e.Source != nil {
-	// 	return e.Source.Name()
-	// }
+	if e.Source != nil {
+		return collection.NewName(e.Source.GroupVersionKind().String())
+	}
 	return ""
 }
 
@@ -60,7 +61,7 @@ func (e *Event) IsSourceAny(names ...collection.Name) bool {
 }
 
 // WithSource returns a new event with the source changed to the given collection.Name, if the event.Kind != Reset.
-func (e *Event) WithSource(s collection.Schema) Event {
+func (e *Event) WithSource(s resource2.Schema) Event {
 	if e.Kind == Reset {
 		return *e
 	}
@@ -96,27 +97,27 @@ func (e Event) String() string {
 }
 
 // FullSyncFor creates a FullSync event for the given source.
-func FullSyncFor(source collection.Schema) Event {
+func FullSyncFor(source resource2.Schema) Event {
 	return Event{Kind: FullSync, Source: source}
 }
 
 // AddFor creates an Add event for the given source and entry.
-func AddFor(source collection.Schema, r *resource.Instance) Event {
+func AddFor(source resource2.Schema, r *resource.Instance) Event {
 	return Event{Kind: Added, Source: source, Resource: r}
 }
 
 // UpdateFor creates an Update event for the given source and entry.
-func UpdateFor(source collection.Schema, r *resource.Instance) Event {
+func UpdateFor(source resource2.Schema, r *resource.Instance) Event {
 	return Event{Kind: Updated, Source: source, Resource: r}
 }
 
 // DeleteForResource creates a Deleted event for the given source and entry.
-func DeleteForResource(source collection.Schema, r *resource.Instance) Event {
+func DeleteForResource(source resource2.Schema, r *resource.Instance) Event {
 	return Event{Kind: Deleted, Source: source, Resource: r}
 }
 
 // DeleteFor creates a Delete event for the given source and name.
-func DeleteFor(source collection.Schema, name resource.FullName, v resource.Version) Event {
+func DeleteFor(source resource2.Schema, name resource.FullName, v resource.Version) Event {
 	return DeleteForResource(source, &resource.Instance{
 		Metadata: resource.Metadata{
 			FullName: name,
